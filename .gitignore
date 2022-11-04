@@ -1,6 +1,17 @@
 # Prerequisites
 *.d
 
+.vscode
+
+# Cmake Stuff
+cmake*
+CMakeFiles/
+CMakeCache.txt
+Makefile
+Testing
+build
+.idea
+
 # Compiled Object files
 *.slo
 *.lo
