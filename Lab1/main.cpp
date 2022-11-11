@@ -15,6 +15,6 @@ int main() {for (int i = 100 / 6; i > 0; i--) ((100 - ((100 - i * 6) + 8)) % 11 
 //        if ((flowers - soldNow) % 11 == 0)
 //            printf(" | yup, he has %d flowers\n", flowers - soldNow);
 //        else
-//            printf(" | FUCK YOU, %d are left out\n", (flowers - soldNow) % 11);
+//            printf(" | nope, %d are left out\n", (flowers - soldNow) % 11);
 //    }
 //    return 0;
