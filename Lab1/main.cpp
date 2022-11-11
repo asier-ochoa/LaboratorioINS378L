@@ -1,5 +1,5 @@
 //ENUNCIADO: Flores de Salvador
-//PARTICIPANTES: 1101331 Ochoa Asier
+//PARTICIPANTES: 1101331 Ochoa Asier // 1100685 Miguelangel
 //FECHA: 10/11/22
 
 #include <cstdio>
