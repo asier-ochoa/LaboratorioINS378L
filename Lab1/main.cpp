@@ -1,3 +1,7 @@
+//ENUNCIADO: Flores de Salvador
+//PARTICIPANTES: 1101331 Ochoa Asier
+//FECHA: 10/11/22
+
 #include <cstdio>
 int main() {for (int i = 100 / 6; i > 0; i--) ((100 - ((100 - i * 6) + 8)) % 11 == 0 ? printf("If %d flowers per row, %d sold | Has %d flowers left\n", i, 100 - i * 6, 100 - ((100 - i * 6) + 8)) : 0);}
 //    int flowers = 100;
