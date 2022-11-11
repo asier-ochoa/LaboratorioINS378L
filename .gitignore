@@ -3,6 +3,7 @@
 
 .vscode
 .vs
+CppProperties.json
 
 # Cmake Stuff
 cmake*
