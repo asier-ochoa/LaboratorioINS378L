@@ -20,5 +20,5 @@ Lueago dependiendo del generador que use:
 cd build && make
 -(En windows con mingw64)
 cd build
-mingw64-make
+mingw32-make
 ```
