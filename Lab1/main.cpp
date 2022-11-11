@@ -9,14 +9,7 @@
 //FECHA: 10/11/22
 
 #include <iostream>
-int main() {
-    int cantidad = 100;
-    for (int i = cantidad - 1; i > 0; i--) {
-        if ((i % 6) == 0) {
-            if ((i - 8) % 11 == 0) {
-                std::cout << "Si salvador vendio " << 100 - i << " en la primera venta. Tendria al final " << i-8 << ".\n";
-            }
-        }
-    }
+
+int main() { for (int i = 100 - 1; i > 0; i--) { if ((i % 6) == 0) { if ((i - 8) % 11 == 0) { std::cout << "Si salvador vendio " << 100 - i << " en la primera venta. Tendria al final " << i-8 << ".\n";}}}
     return 0;
 }
