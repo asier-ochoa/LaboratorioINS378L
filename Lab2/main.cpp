@@ -4,25 +4,46 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
 
 int main(){
-    unsigned int prev_k = 0, longest;
+    unsigned int prev_k = 0, longest, buf_size, tmp_buf_size = 32;
+    unsigned int* buf;
+    unsigned int* tmp_buf = (unsigned int*)malloc(sizeof(int) * 32);
     for (unsigned int i = 10; i < 100; i++){
-        unsigned int n = i, k = 0, buf_size = 512;
+        unsigned int n = i, k = 0;
 
         printf("Guest %u: ", n);
         while (n != 4){
-            printf("%u<", n = (n % 2 == 0 ? n /= 2 : n = n * 3 + 1));
+            n = (n % 2 == 0 ? n /= 2 : n = n * 3 + 1);
+            printf("%u<", n);
+            if (k > tmp_buf_size - 1){
+                unsigned int* tmp = tmp_buf;
+                tmp_buf_size *= 2;
+                tmp_buf = (unsigned int*)malloc(sizeof(int) * tmp_buf_size);
+                memcpy(tmp_buf, tmp, tmp_buf_size / 2);
+                free(tmp);
+            } else
+                tmp_buf[k] = n;
             k++;
         }
         if (k > prev_k){
             prev_k = k;
             longest = i;
+
+            buf = tmp_buf;
+            buf_size = tmp_buf_size;
+
+            tmp_buf_size = 32;
+            tmp_buf = (unsigned int*)malloc(sizeof(int) * tmp_buf_size);
         }
         printf("\b\n");
     }
 
-    printf("\nLongest chain is #%u with %u entries\n", longest, prev_k);
+    printf("\nLongest chain is #%u with %u entries: ", longest, prev_k);
+    for (int i = 0; i < prev_k; i++)
+        printf("%u<", buf[i]);
+    printf("\b\n");
 }
 
 //#include <iostream>
