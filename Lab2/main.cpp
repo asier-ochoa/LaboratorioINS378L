@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 
-class guest{ // DON'T USE VECTORS, BOY
-private:
+struct guest{ // DON'T USE VECTORS, BOY
     unsigned int num;
     unsigned int* list;
     size_t size;
@@ -15,8 +14,7 @@ private:
 
     void expand();
 
-public:
-    guest(): num((rand() % 98) + 1), list(new unsigned int[1]), size(1), elements(1) {list[0] = num;}
+    guest(): num(0), list(new unsigned int[1]), size(1), elements(1) {list[0] = num;}
     guest(const guest& other)
             : num(other.num), list(new unsigned int[other.size]), size(other.size), elements(other.elements)
     {memcpy(list, other.list, size);}
@@ -51,10 +49,10 @@ void guest::makeList() {
 }
 
 std::ostream &operator<<(std::ostream &os, const guest &guest) {
-    for (int i = 0; i < guest.elements - 1; ++i) {
+    for (int i = 1; i < guest.elements; ++i) {
         os << guest.list[i] << '<';
     }
-    os << guest.list[guest.elements - 1];
+    os << '\b';
     return os;
 }
 
@@ -68,14 +66,13 @@ unsigned int findLongest(guest* list) {
 }
 
 int main(const int argc, const char** argv){
-    srand(time(nullptr)); //Seed with unix time
-    guest party[99]; //calls constructor on every member (BRUH)
-    for (int i = 0; i < 99; ++i) {
-        party[i].makeList();
-        if (argc > 1)
-            std::cout << i << ": " << party[i] << '\n';
+    guest party[90]; //calls constructor on every member (BRUH)
+    for (int i = 10; i <= 99; ++i) {
+        party[i - 10].num = i;
+        party[i - 10].makeList();
+        std::cout << "Guest " << i << ':' << party[i - 10] << '\n';
     }
-    unsigned int longest = findLongest<99>(party);
-    std::cout << "\nLongest chain is " << longest << ": " << party[longest] << std::endl;
+    unsigned int longest = findLongest<90>(party);
+    std::cout << "\nLongest chain is " << longest + 10 << ": " << party[longest] << '\n';
     return 0;
 }
