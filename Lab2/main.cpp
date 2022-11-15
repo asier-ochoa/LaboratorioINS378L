@@ -6,18 +6,33 @@
 #include <cstdio>
 #include <cstring>
 
-int main(){
+int main(int argc, char** argv){
     unsigned int prev_k = 0, longest, buf_size, tmp_buf_size = 32;
-    unsigned int* buf;
+    unsigned int* buf = NULL; //Initialize with null so empty free doesn't segfault
     unsigned int* tmp_buf = (unsigned int*)malloc(sizeof(int) * 32);
-    for (unsigned int i = 10; i < 100; i++){
+
+    //check term params
+    unsigned int choosen_n = 0;
+    if (argc == 2){
+        int i = 0;
+        while (argv[1][i] != '\0'){
+            if (!(argv[1][i] > '0' && argv[1][i] < '9')){
+                printf("Error: incorrect argument format\n");
+                return 1;
+            }
+            i++;
+        }
+        choosen_n = atoi(argv[1]);
+    }
+
+    for (unsigned int i = (argc != 2 ? 10 : choosen_n); i < (argc != 2 ? 100 : choosen_n + 1); i++){
         unsigned int n = i, k = 0;
 
         printf("Guest %u: ", n);
         while (n != 4){
-            n = (n % 2 == 0 ? n /= 2 : n = n * 3 + 1);
+            n = (n % 2 == 0 ? n /= 2 : n = n * 3 + 1); //The actual logic
             printf("%u<", n);
-            if (k > tmp_buf_size - 1){
+            if (k > tmp_buf_size - 1){ //Reallocate and swap buffer if out of memory
                 unsigned int* tmp = tmp_buf;
                 tmp_buf_size *= 2;
                 tmp_buf = (unsigned int*)malloc(sizeof(int) * tmp_buf_size);
@@ -31,19 +46,23 @@ int main(){
             prev_k = k;
             longest = i;
 
+            //Save tmp buffer if it's the new longest and allocate new buffer
+            free(buf);
             buf = tmp_buf;
             buf_size = tmp_buf_size;
 
             tmp_buf_size = 32;
             tmp_buf = (unsigned int*)malloc(sizeof(int) * tmp_buf_size);
         }
-        printf("\b\n");
+        printf("\b \n");
     }
 
-    printf("\nLongest chain is #%u with %u entries: ", longest, prev_k);
-    for (int i = 0; i < prev_k; i++)
-        printf("%u<", buf[i]);
-    printf("\b\n");
+    if (argc != 2) {
+        printf("\nLongest chain is #%u with %u entries: ", longest, prev_k);
+        for (int i = 0; i < prev_k; i++)
+            printf("%u<", buf[i]);
+        printf("\b \n");
+    }
 }
 
 //#include <iostream>
