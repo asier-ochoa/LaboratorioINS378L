@@ -21,6 +21,10 @@ El programa debería desplegar Doce mil trescientos cuarenta y cinco con 90 cent
 #include <iostream>
 #include <vector>
 
+#define NUM_EXCEPTION(n, res) \
+case n:                               \
+return res;                         \
+
 std::string numString[] = {
         "",
         "uno ",
@@ -65,9 +69,13 @@ std::string thousString[] = {
         "mil ",
         "millones ",
         "millardos ",
+        "billones ",
+        "trillones ",
 };
 
 std::string algorithm(uint32_t n);
+std::string hundsException(uint32_t n);
+std::string thousException(uint32_t n);
 
 int main(int argc, char** argv){
     if (argc > 1){
@@ -101,8 +109,24 @@ std::string algorithm(uint32_t n){
         thous.emplace_back(n % 1000);
 
     for (uint32_t i = 0; i < thous.size(); i++){
+        if (thous[i] == 0)
+            continue;
+
         uint8_t k = 0;
+        std::string tmpOut;
         output.insert(0, thousString[i]);
+
+        if (!(tmpOut = hundsException(thous[i] % 100)).empty()){
+            output.insert(0, tmpOut);
+            thous[i] /= 100;
+            thous[i] *= 100;
+        }
+
+        if (!(tmpOut = thousException(thous[i])).empty()){
+            output.insert(0, tmpOut);
+            thous[i] = 0;
+        }
+
         output.insert(0, numString[thous[i] % 10]);
         while ((thous[i] /= 10) > 0) {
             switch (k) {
@@ -120,4 +144,26 @@ std::string algorithm(uint32_t n){
     }
 
     return output;
+}
+
+std::string hundsException(uint32_t n){
+    switch (n) {
+        NUM_EXCEPTION(10, "diez ")
+        NUM_EXCEPTION(11, "once ")
+        NUM_EXCEPTION(12, "doce ")
+        NUM_EXCEPTION(13, "trece ")
+        NUM_EXCEPTION(14, "catorce ")
+        NUM_EXCEPTION(15, "quince ")
+        NUM_EXCEPTION(20, "veinte ")
+        default:
+            return "";
+    }
+}
+
+std::string thousException(uint32_t n){
+    switch (n) {
+        NUM_EXCEPTION(100, "cien ")
+        default:
+            return "";
+    }
 }
