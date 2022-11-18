@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 
         printf("Guest %u: ", n);
         while (n != 4){
-            n = (n % 2 == 0 ? n /= 2 : n = n * 3 + 1); //The actual logic
+            n = (n % 2 == 0 ? n / 2 : n * 3 + 1); //The actual logic
             printf("%u<", n);
             if (k > tmp_buf_size - 1){ //Reallocate and swap buffer if out of memory
                 unsigned int* tmp = tmp_buf;
