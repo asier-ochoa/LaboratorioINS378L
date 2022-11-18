@@ -173,6 +173,13 @@ std::string hundsException(uint64_t n){
         NUM_EXCEPTION(14, "catorce ")
         NUM_EXCEPTION(15, "quince ")
         NUM_EXCEPTION(20, "veinte ")
+        NUM_EXCEPTION(30, "treinta ")
+        NUM_EXCEPTION(40, "cuarenta ")
+        NUM_EXCEPTION(50, "cincuenta ")
+        NUM_EXCEPTION(60, "sesenta ")
+        NUM_EXCEPTION(70, "setenta ")
+        NUM_EXCEPTION(80, "ochenta ")
+        NUM_EXCEPTION(90, "noventa ")
         default:
             return "";
     }
