@@ -1,15 +1,15 @@
 //ENUNCIADO:
 /*Realizar un programa C++ que lea un número real (correspondiente a un monto) y convertir este monto a palabra.
 
-Restricciones: 
-• El # tiene mascara 999,999,999.99 
-• Si el grupo determina puede variar el alcance del algoritmo. 
-• Solo llevar a palabras la parte entera del número. 
-• Utilizar el enfoque de divide y venceras 
+Restricciones:
+• El # tiene mascara 999,999,999.99
+• Si el grupo determina puede variar el alcance del algoritmo.
+• Solo llevar a palabras la parte entera del número.
+• Utilizar el enfoque de divide y venceras
 
-El programa debe desplegar en pantalla el resultado de la conversión del número a palabra. 
-Deben observarse todas las reglas gramaticales relativas a nombrar los numerales. Ejemplo: 
-si el usuario introduce 12,345.90 
+El programa debe desplegar en pantalla el resultado de la conversión del número a palabra.
+Deben observarse todas las reglas gramaticales relativas a nombrar los numerales. Ejemplo:
+si el usuario introduce 12,345.90
 
 El programa debería desplegar Doce mil trescientos cuarenta y cinco con 90 centavos*/
 
@@ -27,7 +27,7 @@ return res;                         \
 
 std::string numString[] = {
         "",
-        "uno ",
+        "un ",
         "dos ",
         "tres ",
         "cuatro ",
@@ -81,12 +81,30 @@ int main(int argc, char** argv){
     if (argc > 1){
         try {
             std::string input(argv[1]);
+            for (auto c: input) {
+                if (!(c >= '0' && c <= '9' || c == '.')){
+                    std::cout << "INVALID INPUT!\n";
+                    return 1;
+                }
+            }
+
+            std::string cents;
+            auto pos = input.find('.');
+            if (pos != std::string::npos){
+                cents = input.substr(pos + 1, 2);
+                if (cents.size() < 2){
+                    cents.append("0");
+                }
+            }
             if (input[0] == '-'){
                 std::cout << "Enter a non negative number!\n";
                 return 1;
             }
             uint64_t n = std::stoul(input);
-            std::cout << n << ": " << algorithm(n) << '\n';
+            if (!cents.empty())
+                std::cout << n << ": " << algorithm(n) << "con " << cents << (cents == "01" ? " centavo\n" : " centavos\n");
+            else
+                std::cout << n << ": " << algorithm(n) << '\n';
         } catch (std::invalid_argument&){
             std::cout << "Incorrect number format!\n";
             return 1;
@@ -124,25 +142,25 @@ std::string algorithm(uint64_t n){
                 continue;
             }
             else if (i == 3){
-                output.insert(0, thousString[i].erase(thousString[i].find('s')));
+                output.insert(0, thousString[i].erase(thousString[i].find('s')).append(" "));
                 output.insert(0, "un ");
                 continue;
             } else {
-                output.insert(0, thousString[i].erase(thousString[i].find("es")));
+                output.insert(0, thousString[i].erase(thousString[i].find("es")).append(" "));
                 output.insert(0, "un ");
                 continue;
             }
         }
         output.insert(0, thousString[i]);
 
+        if (!(tmpOut = thousException(thous[i])).empty()){
+            output.insert(0, tmpOut);
+            thous[i] = 0;
+        }
         if (!(tmpOut = hundsException(thous[i] % 100)).empty()){
             output.insert(0, tmpOut);
             thous[i] /= 100;
             thous[i] *= 100;
-        }
-        if (!(tmpOut = thousException(thous[i])).empty()){
-            output.insert(0, tmpOut);
-            thous[i] = 0;
         }
 
         output.insert(0, numString[thous[i] % 10]);
@@ -160,6 +178,13 @@ std::string algorithm(uint64_t n){
             k++;
         }
     }
+    //ghetto ahh fix
+    if (output[output.size() - 3] == 'u' && output[output.size() - 2] == 'n'){
+        output.pop_back();
+        output.push_back('o');
+        output.push_back(' ');
+    }
+
 
     return output;
 }
@@ -188,6 +213,7 @@ std::string hundsException(uint64_t n){
 std::string thousException(uint64_t n){
     switch (n) {
         NUM_EXCEPTION(100, "cien ")
+        NUM_EXCEPTION(121, "ciento veintiun ")
         default:
             return "";
     }
