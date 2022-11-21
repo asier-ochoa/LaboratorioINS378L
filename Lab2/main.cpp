@@ -63,6 +63,8 @@ int main(int argc, char** argv){
             printf("%u<", buf[i]);
         printf("\b \n");
     }
+    free(tmp_buf);
+    free(buf);
 }
 
 //#include <iostream>
