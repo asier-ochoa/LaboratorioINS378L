@@ -121,7 +121,7 @@ int main(int argc, char** argv){
 
 std::string algorithm(uint64_t n){
     if (n == 0)
-        return "Cero";
+        return "cero ";
     std::vector<uint64_t> thous;
     std::string output;
     //emplace thousands into vector
@@ -136,6 +136,7 @@ std::string algorithm(uint64_t n){
         uint8_t k = 0;
         std::string tmpOut;
 
+        //Condition for singular suffixes
         if (thous[i] == 1 && i != 0){
             if (i == 1){
                 output.insert(0, thousString[i]);
@@ -153,6 +154,7 @@ std::string algorithm(uint64_t n){
         }
         output.insert(0, thousString[i]);
 
+        //Handle special cases for thous and hunds and remove their digits
         if (!(tmpOut = thousException(thous[i])).empty()){
             output.insert(0, tmpOut);
             thous[i] = 0;
@@ -163,6 +165,7 @@ std::string algorithm(uint64_t n){
             thous[i] *= 100;
         }
 
+        //actual logic
         output.insert(0, numString[thous[i] % 10]);
         while ((thous[i] /= 10) > 0) {
             switch (k) {
@@ -213,7 +216,7 @@ std::string hundsException(uint64_t n){
 std::string thousException(uint64_t n){
     switch (n) {
         NUM_EXCEPTION(100, "cien ")
-        NUM_EXCEPTION(121, "ciento veintiun ")
+//        NUM_EXCEPTION(121, "ciento veintiun ")
         default:
             return "";
     }
