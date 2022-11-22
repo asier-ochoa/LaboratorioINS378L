@@ -1,4 +1,6 @@
 #include "wx/wx.h"
+#include "wx/generic/grid.h"
+
 class MyApp: public wxApp
 {
     public:
@@ -8,6 +10,9 @@ class MyFrame: public wxFrame
 {
     public:
         MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+
+    protected:
+
     private:
         void OnHello(wxCommandEvent& event);
         void OnExit(wxCommandEvent& event);
@@ -16,14 +21,19 @@ class MyFrame: public wxFrame
 };
 enum
 {
-    ID_Hello = 1
+    ID_Hello = 1,
+    ID_fuck = 3
 };
+
+
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 EVT_MENU(ID_Hello,   MyFrame::OnHello)
 EVT_MENU(wxID_EXIT,  MyFrame::OnExit)
 EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
 wxEND_EVENT_TABLE()
 wxIMPLEMENT_APP(MyApp);
+
+void fuck(wxCommandEvent& event);
 bool MyApp::OnInit()
 {
     MyFrame *frame = new MyFrame( "Hello World", wxPoint(50, 50), wxSize(450, 340) );
@@ -46,7 +56,17 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     SetMenuBar( menuBar );
     CreateStatusBar();
     SetStatusText( "Welcome to wxWidgets!" );
+    auto* button = new wxButton(this, wxID_ANY, "WOOW");
+    button->Connect(wxEVT_BUTTON, fuck);
+//    auto* table = new wxGrid(this, wxID_ANY);
+//    table->CreateGrid(20,4);
+//    table->SetRowSize()
 }
+
+void fuck(wxCommandEvent& event){
+    std::cout << "FUCK\n";
+}
+
 void MyFrame::OnExit(wxCommandEvent& event)
 {
     Close( true );
