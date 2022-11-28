@@ -1,5 +1,5 @@
 //ENUNCIADO: Cadena mas larga
-//PARTICIPANTES: 1101331 Asier Ochoa ; Yeuris Terrero | 1099399 ; Carlos Garcia | 1101629 ; Miguel Angel | 1100685
+//PARTICIPANTES: 1101331 Asier Ochoa ; Yeuris Terrero | 1099399 ; Carlos Garcia | 1101629 ; Miguel Angel | 1100685 ; Rodolfo Peña 10712515
 //FECHA:19/05/22
 
 #include <cstdlib>
@@ -25,7 +25,7 @@ int main(int argc, char** argv){
         choosen_n = atoi(argv[1]);
     }
 
-    for (unsigned int i = (argc != 2 ? 10 : choosen_n); i < (argc != 2 ? 100 : choosen_n + 1); i++){
+    for (unsigned int i = (argc != 2 ? 1 : choosen_n); i < (argc != 2 ? 100 : choosen_n + 1); i++){
         unsigned int n = i, k = 0;
 
         printf("Guest %u: ", n);
