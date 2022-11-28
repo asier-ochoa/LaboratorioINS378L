@@ -1,0 +1,3 @@
+file(GLOB SRC_FILES *.cpp)
+add_executable(GUItest ${SRC_FILES})
+target_link_libraries(GUItest wx::net wx::core wx::base)
