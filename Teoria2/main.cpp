@@ -1,12 +1,11 @@
 #include "wx/wx.h"
-#include "wx/generic/grid.h"
 
 namespace State {
     char gameBoard[] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     bool player1Turn = true;
     bool previousGameStarter = true;
-    std::string p1Name;
-    std::string p2Name;
+    std::wstring p1Name;
+    std::wstring p2Name;
 }
 
 bool hasWon() {
@@ -141,6 +140,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
         : wxFrame(nullptr, wxID_ANY, title, pos, size){
     auto mainLayout = new wxBoxSizer(wxVERTICAL);
     this->SetSizer(mainLayout);
+    this->SetMinSize(wxSize(230,150));
 
     auto topBarLayout = new wxBoxSizer(wxHORIZONTAL);
     mainLayout->Add(topBarLayout, 0, wxALL | wxALIGN_CENTER, 10);
@@ -150,6 +150,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
 
     auto newGameButton = new wxButton(this, NewGameButtonID, "New Game");
     auto statusText = new wxStaticText(this, wxID_ANY, "It's " + (State::player1Turn ? State::p1Name : State::p2Name) + "'s turn");
+    statusText->Wrap(-1);
 
     for (int i = 0; i < 9; i++){
         gameGrid[i] = new wxButton(this, i, " ");
