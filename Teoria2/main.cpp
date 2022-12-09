@@ -1,3 +1,8 @@
+//ENUNCIADO:
+//Hacer un tic tac toe que permite escoger el nombre
+//PARTICIPANTES: 1101331 Ochoa Asier; 1072515 Rodoflo Peña; Carlos Ismael Garcia 1101629; 1100685 Miguelangel; Yeuris Terrero 1099399
+//FECHA: 01/12/22
+
 #include "wx/wx.h"
 
 namespace State {
@@ -125,16 +130,11 @@ PlayerDialog::PlayerDialog(wxWindow* parent, wxWindowID id, const wxString &titl
     auto confirmButton = new wxButton(this, ConfirmButtonID, "Confirm");
     p1Layout->Add(confirmButton, 0, wxALL, 5);
 
-    this->SetSize(this->GetEffectiveMinSize());
-    if (this->GetSize().GetHeight() < 150){
-        this->SetSize(wxSize(400, 200));
-    }
-
     Bind(wxEVT_BUTTON, [=](wxCommandEvent& event){
         State::p1Name = p1Input->GetValue();
         State::p2Name = p2Input->GetValue();
         this->Close();
-        auto frame = new MyFrame("Tic Tac Toe", wxDefaultPosition, wxSize(500, 500));
+        auto frame = new MyFrame("Tic Tac Toe", wxDefaultPosition, wxDefaultSize);
         frame->Show(true);
     }, ConfirmButtonID);
 }
