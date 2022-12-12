@@ -1,3 +1,4 @@
-file(GLOB SRC_FILES *.cpp)
-add_executable(CircleDraw ${SRC_FILES})
+add_executable(CircleDraw main.cpp)
+add_executable(Triangles triangles.cpp)
 target_link_libraries(CircleDraw wx::net wx::core wx::base)
+target_link_libraries(Triangles wx::net wx::core wx::base)
