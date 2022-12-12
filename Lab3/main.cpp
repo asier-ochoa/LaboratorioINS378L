@@ -50,11 +50,11 @@ struct VirtualCanvas{
     void DrawCircle(int x, int y, int r, bool filled = false){
         static float step = 0.1;
         if (filled){
-            for (float i = 0; i < 180; i += 0.1){
+            for (float i = 0; i < 180; i += 0.05){
                 DrawLine(x + cos(-i * M_PI / 180) * r, y + sin(-i * M_PI / 180) * r, x + (cos(i * M_PI / 180) * r), y + (sin(i * M_PI / 180) * r));
             }
         } else {
-            for (float i = 0; i < 360; i += 0.1){
+            for (float i = 0; i < 360; i += 0.05){
                 DrawPixel(x + (cos(i * M_PI / 180) * r), y + (sin(i * M_PI / 180) * r));
             }
         }
