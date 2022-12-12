@@ -1,5 +1,6 @@
 #include <optional>
 #include "wx/wx.h"
+#include "wx/valnum.h"
 
 struct VirtualCanvas{
     // Coordinates are +X left and +Y down
@@ -17,36 +18,48 @@ struct VirtualCanvas{
         clear();
     }
 
-    void DrawPixel(uint16_t x, uint16_t y){
-        if (x < 2000 && y < 2000){
+    void DrawPixel(int x, int y){
+        if (x < 2000 && y < 2000 && x > 0 && y > 0){
             buff[x][y] = true;
         }
     }
 
-    void DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2){
-        int slope;
-        // swap coords
-        if (x2 < x1){
-            auto tmp = x1;
-            x1 = x2;
-            x2 = tmp;
+    void DrawLine(int x1, int y1, int x2, int y2){
+        float x;
+        float y;
+        float dx, dy, step;
 
-            tmp = y1;
-            y1 = y2;
-            y2 = tmp;
+        dx = (x2 - x1);
+        dy = (y2 - y1);
+        if (abs(dx) >= abs(dy))
+            step = abs(dx);
+        else
+            step = abs(dy);
+        dx = dx / step;
+        dy = dy / step;
+        x = x1;
+        y = y1;
+        int i = 1;
+        for (int i = 1; i <= step; i++) {
+            DrawPixel(x, y);
+            x += dx;
+            y += dy;
         }
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        if (dx < dy){
-            for (int i = y1; i < y2; i++){
-                DrawPixel(x1 + dx * (i - y1) / dy, i);
+    }
+
+    void DrawCircle(int x, int y, int r, bool filled = false){
+        static float step = 0.1;
+        if (filled){
+            for (float i = 0; i < 180; i += 0.1){
+                DrawLine(x + cos(-i * M_PI / 180) * r, y + sin(-i * M_PI / 180) * r, x + (cos(i * M_PI / 180) * r), y + (sin(i * M_PI / 180) * r));
             }
         } else {
-            for (int i = x1; i < x2; i++){
-                DrawPixel(i, y1 + dy * (i - x1) / dx);
+            for (float i = 0; i < 360; i += 0.1){
+                DrawPixel(x + (cos(i * M_PI / 180) * r), y + (sin(i * M_PI / 180) * r));
             }
         }
     }
+
 };
 
 class App: public wxApp{
@@ -69,10 +82,7 @@ class Canvas: public wxPanel{
 };
 
 Canvas::Canvas(wxWindow *parent, wxWindowID id)
-    :wxPanel(parent, id) {
-    vc.DrawLine(50, 50, 300, 565);
-    vc.DrawLine(50, 50, 300, 51);
-}
+    :wxPanel(parent, id) {}
 
 void Canvas::Draw(wxPaintEvent &evt) {
     wxPaintDC dc(this);
@@ -103,8 +113,20 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
     auto layout = new wxBoxSizer(wxVERTICAL);
     this->SetSizer(layout);
 
+    auto topLayout = new wxBoxSizer(wxHORIZONTAL);
+    layout->Add(topLayout, 0, wxCENTER | wxALL, 10);
+
     auto button = new wxButton(this, wxID_ANY, "Reset");
-    layout->Add(button, 0, wxCENTER | wxALL, 10);
+    topLayout->Add(button, 0, wxALL, 10);
+
+    auto checkBox = new wxCheckBox(this, wxID_ANY, "Filled");
+    topLayout->Add(checkBox, 0, wxALL, 10);
+
+    wxIntegerValidator<int> validator;
+    validator.SetMin(0);
+    validator.SetMax(1000);
+    auto radiusCtrl = new wxTextCtrl(this, wxID_ANY, "100", wxDefaultPosition, wxDefaultSize, 0, validator);
+    topLayout->Add(radiusCtrl, 0, wxALL, 10);
 
     auto canvas = new Canvas(this, canvasID);
     layout->Add(canvas, 100, wxEXPAND);
@@ -116,16 +138,8 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
 
     canvas->Bind(wxEVT_PAINT, &Canvas::Draw, canvas);
     canvas->Bind(wxEVT_LEFT_UP, [=](wxMouseEvent& evt){
-        static std::optional<std::pair<long, long>> state;
-        if (state.has_value()) {
-            auto pos = evt.GetPosition();
-            canvas->vc.DrawLine(state->first, state->second, pos.x, pos.y);
-            canvas->Refresh();
-            state.reset();
-        } else {
-            auto pos = evt.GetPosition();
-            state = std::make_pair(pos.x, pos.y);
-        }
+        canvas->vc.DrawCircle(evt.GetPosition().x, evt.GetPosition().y, atoi(radiusCtrl->GetValue()), checkBox->GetValue());
+        canvas->Refresh();
     }, canvasID);
 
     button->SetLabel("Reset");
