@@ -1,6 +1,39 @@
 #include <memory>
 #include "wx/wx.h"
 
+std::vector<std::array<std::pair<float, float>, 3>> triangles;
+int step = 0;
+
+void nextStep() {
+    if (triangles.empty()){
+        triangles.push_back({std::make_pair(0, 0), std::make_pair(-0.5,1), std::make_pair(0.5,1)});
+        step++;
+    } else {
+        //Create 2 copies of the current triangle
+        std::vector<std::array<std::pair<float, float>, 3>> currTriangleLeft(triangles);
+        std::vector<std::array<std::pair<float, float>, 3>> currTriangleRight(triangles);
+        //Offset Left
+        for (auto& t: currTriangleLeft){
+            for (auto& p: t){
+                p.first -= pow(2, step) / 4;
+                p.second += pow(2, step) / 2;
+            }
+        }
+        //Offset Right
+        for (auto& t: currTriangleRight){
+            for (auto& p: t){
+                p.first += pow(2, step) / 4;
+                p.second += pow(2, step) / 2;
+            }
+        }
+        // Insert new triangles
+        triangles.insert(triangles.end(), currTriangleLeft.begin(), currTriangleLeft.end());
+        triangles.insert(triangles.end(), currTriangleRight.begin(), currTriangleRight.end());
+
+        step++;
+    }
+}
+
 #define INTERPX(X) interpRange(minX, maxX, 0, dc.GetSize().x, X)
 #define INTERPY(X) interpRange(0, maxY, 0, dc.GetSize().y, X)
 
@@ -18,9 +51,6 @@ class Frame: public wxFrame{
 class Canvas: public wxPanel{
     public:
         Canvas(wxWindow* parent, wxWindowID id);
-
-        std::vector<std::array<std::pair<float, float>, 3>> triangles;
-        int step = 0;
         bool filled = false;
 
         void Draw(wxPaintEvent& evt);
@@ -64,13 +94,13 @@ enum {
 wxIMPLEMENT_APP(App);
 
 bool App::OnInit() {
-    auto mainFrame = new Frame(wxDefaultPosition, wxSize(500, 500), wxDEFAULT_FRAME_STYLE, "Circle Drawing");
+    auto mainFrame = new Frame(wxDefaultPosition, wxSize(800, 800), wxDEFAULT_FRAME_STYLE, "Sierpinski triangle");
     mainFrame->Show();
     return true;
 }
 
 Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString &name)
-        : wxFrame(nullptr, wxID_ANY, "Circle Drawing", pos, size, style, name) {
+        : wxFrame(nullptr, wxID_ANY, name, pos, size, style, name) {
     auto layout = new wxBoxSizer(wxVERTICAL);
     this->SetSizer(layout);
 
@@ -91,35 +121,12 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
 
     canvas->Bind(wxEVT_PAINT, &Canvas::Draw, canvas);
     resetButton->Bind(wxEVT_BUTTON, [=](auto evt){
-        canvas->triangles.clear();
-        canvas->step = 0;
+        triangles.clear();
+        step = 0;
         canvas->Refresh();
     }, resetID);
     nextButton->Bind(wxEVT_BUTTON, [=](auto evt){
-        if (canvas->triangles.empty()){
-            canvas->triangles.push_back({std::make_pair(0, 0), std::make_pair(-0.5,1), std::make_pair(0.5,1)});
-            canvas->step++;
-        } else {
-            std::vector<std::array<std::pair<float, float>, 3>> currTriangleLeft(canvas->triangles);
-            std::vector<std::array<std::pair<float, float>, 3>> currTriangleRight(canvas->triangles);
-            for (auto& t: currTriangleLeft){
-                for (auto& p: t){
-                    p.first -= pow(2, canvas->step) / 4;
-                    p.second += pow(2, canvas->step) / 2;
-                }
-            }
-            for (auto& t: currTriangleRight){
-                for (auto& p: t){
-                    p.first += pow(2, canvas->step) / 4;
-                    p.second += pow(2, canvas->step) / 2;
-                }
-            }
-            // Insert new triangles
-            canvas->triangles.insert(canvas->triangles.end(), currTriangleLeft.begin(), currTriangleLeft.end());
-            canvas->triangles.insert(canvas->triangles.end(), currTriangleRight.begin(), currTriangleRight.end());
-
-            canvas->step++;
-        }
+        nextStep();
         canvas->Refresh();
     }, nextID);
     filledToggle->Bind(wxEVT_CHECKBOX, [=](auto& evt){
