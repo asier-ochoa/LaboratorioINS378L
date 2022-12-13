@@ -18,8 +18,10 @@ class Frame: public wxFrame{
 class Canvas: public wxPanel{
     public:
         Canvas(wxWindow* parent, wxWindowID id);
+
         std::vector<std::array<std::pair<float, float>, 3>> triangles;
         int step = 0;
+        bool filled = false;
 
         void Draw(wxPaintEvent& evt);
 };
@@ -39,8 +41,9 @@ void Canvas::Draw(wxPaintEvent &evt) {
 
     float minX = -pow(2, step) / 4, maxX = abs(minX), maxY = pow(2, step) / 2;
 
-    std::cout << "MinX: " << minX << "MaxY: " << maxY << '\n';
-
+    if (filled) {
+        dc.SetBrush(*wxBLACK_BRUSH);
+    }
     for (auto& t: triangles){
         wxPoint triangle[] = {
             wxPoint(INTERPX(t[0].first), INTERPY(t[0].second)),
@@ -54,7 +57,8 @@ void Canvas::Draw(wxPaintEvent &evt) {
 enum {
     canvasID = 1,
     resetID = 2,
-    nextID = 3
+    nextID = 3,
+    filledID = 4
 };
 
 wxIMPLEMENT_APP(App);
@@ -77,7 +81,10 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
     topLayout->Add(resetButton, 0, wxRIGHT, 10);
 
     auto nextButton = new wxButton(this, nextID, "Next step");
-    topLayout->Add(nextButton);
+    topLayout->Add(nextButton, 0, wxRIGHT, 10);
+
+    auto filledToggle = new wxCheckBox(this, filledID, "Filled");
+    topLayout->Add(filledToggle, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 10);
 
     auto canvas = new Canvas(this, canvasID);
     layout->Add(canvas, 100, wxEXPAND | wxBOTTOM | wxLEFT | wxRIGHT, 10);
@@ -115,4 +122,8 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
         }
         canvas->Refresh();
     }, nextID);
+    filledToggle->Bind(wxEVT_CHECKBOX, [=](auto& evt){
+        canvas->filled = filledToggle->GetValue();
+        canvas->Refresh();
+    }, filledID);
 }
