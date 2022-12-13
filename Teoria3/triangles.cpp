@@ -1,6 +1,9 @@
 #include <memory>
 #include "wx/wx.h"
 
+#define INTERPX(X) interpRange(minX, maxX, 0, dc.GetSize().x, X)
+#define INTERPY(X) interpRange(0, maxY, 0, dc.GetSize().y, X)
+
 class App: public wxApp{
     public:
     private:
@@ -24,10 +27,28 @@ class Canvas: public wxPanel{
 Canvas::Canvas(wxWindow *parent, wxWindowID id)
         :wxPanel(parent, id) {}
 
+//Interpolate from one range to another
+float interpRange(float minA, float maxA, float minB, float maxB, float x){
+    return minB + ((x - minA) / (maxA - minA)) * maxB;
+}
+
 void Canvas::Draw(wxPaintEvent &evt) {
     wxPaintDC dc(this);
     dc.SetBackground(wxBrush(wxColour(0xff, 0xff, 0xff, 0xff)));
     dc.Clear();
+
+    float minX = -pow(2, step) / 4, maxX = abs(minX), maxY = pow(2, step) / 2;
+
+    std::cout << "MinX: " << minX << "MaxY: " << maxY << '\n';
+
+    for (auto& t: triangles){
+        wxPoint triangle[] = {
+            wxPoint(INTERPX(t[0].first), INTERPY(t[0].second)),
+            wxPoint(INTERPX(t[1].first), INTERPY(t[1].second)),
+            wxPoint(INTERPX(t[2].first), INTERPY(t[2].second))
+        };
+        dc.DrawPolygon(3, triangle);
+    }
 }
 
 enum {
@@ -52,10 +73,10 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
     auto topLayout = new wxBoxSizer(wxHORIZONTAL);
     layout->Add(topLayout, 0, wxCENTER | wxALL, 10);
 
-    auto resetButton = new wxButton(this, wxID_ANY, "Reset");
+    auto resetButton = new wxButton(this, resetID, "Reset");
     topLayout->Add(resetButton, 0, wxRIGHT, 10);
 
-    auto nextButton = new wxButton(this, wxID_ANY, "Next step");
+    auto nextButton = new wxButton(this, nextID, "Next step");
     topLayout->Add(nextButton);
 
     auto canvas = new Canvas(this, canvasID);
@@ -65,20 +86,33 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
     resetButton->Bind(wxEVT_BUTTON, [=](auto evt){
         canvas->triangles.clear();
         canvas->step = 0;
+        canvas->Refresh();
     }, resetID);
     nextButton->Bind(wxEVT_BUTTON, [=](auto evt){
         if (canvas->triangles.empty()){
-            canvas->triangles.push_back({std::make_pair(0.5, 0), std::make_pair(1,1), std::make_pair(0,1)});
+            canvas->triangles.push_back({std::make_pair(0, 0), std::make_pair(-0.5,1), std::make_pair(0.5,1)});
             canvas->step++;
-        } else if(canvas->triangles.size() == 1) {
-
         } else {
-            std::vector<std::array<std::pair<float, float>, 3>> currTriangle(canvas->triangles);
-            for (auto& t: currTriangle){
+            std::vector<std::array<std::pair<float, float>, 3>> currTriangleLeft(canvas->triangles);
+            std::vector<std::array<std::pair<float, float>, 3>> currTriangleRight(canvas->triangles);
+            for (auto& t: currTriangleLeft){
                 for (auto& p: t){
-                    p.first *= 20;
+                    p.first -= pow(2, canvas->step) / 4;
+                    p.second += pow(2, canvas->step) / 2;
                 }
             }
+            for (auto& t: currTriangleRight){
+                for (auto& p: t){
+                    p.first += pow(2, canvas->step) / 4;
+                    p.second += pow(2, canvas->step) / 2;
+                }
+            }
+            // Insert new triangles
+            canvas->triangles.insert(canvas->triangles.end(), currTriangleLeft.begin(), currTriangleLeft.end());
+            canvas->triangles.insert(canvas->triangles.end(), currTriangleRight.begin(), currTriangleRight.end());
+
+            canvas->step++;
         }
+        canvas->Refresh();
     }, nextID);
 }
