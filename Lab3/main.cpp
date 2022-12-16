@@ -16,13 +16,13 @@ int main()
     cin>>r;
     d = 2*r;
 
-    vector<vector<char>> drawPlano( r * 2, vector<char>(r*2,' '));
-
+    vector<vector<char>> drawPlano( r * 4, vector<char>(r*4,' '));
+    
     
     for (float t = 0.0; t < d; t+=0.1)
     {
         y = r * cos(t) + r + 1;
-        x = r * sin(t) + r + 1;
+        x = 0.5 * r * sin(t) + r + 1;
         drawPlano[x][y] = '*';
     }
     
@@ -38,8 +38,6 @@ int main()
         cout << line << endl;
         
     }
-
-
 
     return 0;
 }
