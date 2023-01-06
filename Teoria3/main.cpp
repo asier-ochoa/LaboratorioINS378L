@@ -1,3 +1,8 @@
+//ENUNCIADO:
+//Hacer un programa que dibuje un criculo
+//PARTICIPANTES: 1101331 Ochoa Asier; 1072515 Rodoflo Peña; Carlos Ismael Garcia 1101629; 1100685 Miguelangel; Yeuris Terrero 1099399
+//FECHA: 27/12/22
+
 #include <optional>
 #include "wx/wx.h"
 #include "wx/valnum.h"

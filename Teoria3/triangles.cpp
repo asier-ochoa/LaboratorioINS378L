@@ -1,3 +1,8 @@
+//ENUNCIADO:
+//Hacer un programa que muestre un triangulo de sierpinski
+//PARTICIPANTES: 1101331 Ochoa Asier; 1072515 Rodoflo Peña; Carlos Ismael Garcia 1101629; 1100685 Miguelangel; Yeuris Terrero 1099399
+//FECHA: 28/12/22
+
 #include <memory>
 #include "wx/wx.h"
 
