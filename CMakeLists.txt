@@ -15,8 +15,8 @@ endif()
 
 add_subdirectory(Lab1)
 add_subdirectory(Lab2)
-add_subdirectory(Lab3)
 
 add_subdirectory(Teoria1)
 add_subdirectory(Teoria2)
+add_subdirectory(Teoria3)
 add_subdirectory(wxTest)

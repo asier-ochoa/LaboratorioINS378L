@@ -15,7 +15,7 @@ namespace State {
 
 bool hasWon() {
     using namespace State;
-    for (int i = 0; i < 8; i++){
+    for (int i = 0; i < 7; i++){
         char curPiece = gameBoard[i];
         if (curPiece != ' '){
             //Horizontal Check
