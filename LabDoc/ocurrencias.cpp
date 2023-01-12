@@ -6,24 +6,38 @@
 
 int main()
 {
-    int a[10], i, j, v, count, n[10], m, c = 0;
+    int a[10], v, count, n[10], m, c = 0;
     std::cout << "Digite los valores del arreglo\n";
 
-    for(i=0; i<=9; i++) {
+    std::string input;
+    bool valid;
+    for (int i = 0; i <= 9; i++) {
         std::cout << "Digite el valor numero " << i + 1 << " : ";
-        std::cin >> a[i];
+        while (!valid){
+            std::cin >> input;
+            valid = true;
+            for (const auto& x: input){
+                if (x < '0' || x > '9'){
+                    std::cout << "Caracter invalido! Vuelva a intentar: ";
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        a[i] = atoi(input.c_str());
+        valid = false;
     }
 
-    for(j = 0; j <= 9; j++) {
+    for(int j = 0; j <= 9; j++) {
         v = a[j];
         count = 0;
         m = 1;
-        for (i = 0; i <= 9; i++) {
+        for (int i = 0; i <= 9; i++) {
             if (v == a[i])
                count++;
         }
 
-        for (i = 0; i < c; i++) {
+        for (int i = 0; i < c; i++) {
             if (n[i] == v)
                 m=0;
         }
