@@ -6,19 +6,38 @@
 
 int main()
 {
-    int a[10], v, count, n[10], m, c = 0;
+    int size, v, count, m, c = 0;
+    std::string input;
+    bool valid = false;
+    std::cout << "Digite tamano del arreglo : ";
+    while (!valid){
+        std::cin >> input;
+        valid = true;
+        for (const auto& x: input){
+            if (x < '0' || x > '9'){
+                std::cout << "Caracter invalido! Vuelva a intentar : ";
+                valid = false;
+                break;
+            }
+        }
+    }
+    valid = false;
+    size = atoi(input.c_str());
+    input.clear();
+
+    int a[size];
+    int n[size];
+
     std::cout << "Digite los valores del arreglo\n";
 
-    std::string input;
-    bool valid;
-    for (int i = 0; i <= 9; i++) {
+    for (int i = 0; i < size; i++) {
         std::cout << "Digite el valor numero " << i + 1 << " : ";
         while (!valid){
             std::cin >> input;
             valid = true;
             for (const auto& x: input){
                 if (x < '0' || x > '9'){
-                    std::cout << "Caracter invalido! Vuelva a intentar: ";
+                    std::cout << "Caracter invalido! Vuelva a intentar : ";
                     valid = false;
                     break;
                 }
@@ -28,11 +47,11 @@ int main()
         valid = false;
     }
 
-    for(int j = 0; j <= 9; j++) {
+    for(int j = 0; j < size; j++) {
         v = a[j];
         count = 0;
         m = 1;
-        for (int i = 0; i <= 9; i++) {
+        for (int i = 0; i < size; i++) {
             if (v == a[i])
                count++;
         }
