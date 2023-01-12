@@ -7,21 +7,21 @@
 #include "wx/wx.h"
 #include "wx/valnum.h"
 
-std::vector<std::pair<float, float>> vertices;
+std::vector<std::pair<float, float>> points;
 std::pair<float, float> lastVertex;
 std::array<std::pair<float, float>, 3> triangle = {{{0,0},{-0.5,1},{0.5,1}}};
 
 int step = 0;
 
 void nextStep() {
-    if (vertices.empty()){
+    if (points.empty()){
         //Pick initial random vertex
         lastVertex = {-0.5 + (float)(rand()) / ((float)(RAND_MAX / (0.5 - (-0.5)))), (float)(rand()) / (float)(RAND_MAX)};
     }
     //Roll dice on index
     int index = rand() % (2 + 1);
-    vertices.emplace_back(triangle[index].first + lastVertex.first / 2, triangle[index].second + lastVertex.second / 2);
-    lastVertex = vertices.back();
+    points.emplace_back(triangle[index].first + lastVertex.first / 2, triangle[index].second + lastVertex.second / 2);
+    lastVertex = points.back();
 
     step++;
 }
@@ -66,7 +66,7 @@ void Canvas::Draw(wxPaintEvent &evt) {
     if (filled) {
         dc.SetBrush(*wxBLACK_BRUSH);
     }
-    for (auto [x, y]: vertices) {
+    for (auto [x, y]: points) {
         dc.DrawPoint(INTERPX(x), INTERPY(y));
     }
 }
@@ -115,7 +115,7 @@ Frame::Frame(const wxPoint &pos, const wxSize &size, long style, const wxString 
 
     canvas->Bind(wxEVT_PAINT, &Canvas::Draw, canvas);
     resetButton->Bind(wxEVT_BUTTON, [=](auto evt){
-        vertices.clear();
+        points.clear();
         step = 0;
         canvas->Refresh();
     }, resetID);
