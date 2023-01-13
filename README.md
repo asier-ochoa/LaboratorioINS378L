@@ -1,6 +1,6 @@
 # LaboratorioINS378L
 
-Repositorio del grupo compuesto por <> para el laboratorio de Estructuras de Datos y Algoritmos 2.
+Repositorio del grupo compuesto por <Yeuris Terrero, Rodolfo Peña, Asier Ochoa, Miguelangel Gonzalez y Carlos Ismael> para el laboratorio de Estructuras de Datos y Algoritmos 2.
 
 ## Como compilar
 Requisitos:
