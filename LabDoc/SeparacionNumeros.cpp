@@ -3,17 +3,17 @@
 
 #include <iostream>
 #include <string>
-using namespace std;
+
 int main()
 {
-    string Respuesta="y", numstring;
-    int num=0, n, divisor, numnuevo, numposición;
+    std::string Respuesta="y", numstring;
+    int num=0, n, divisor, numnuevo, numposicion;
     bool respuestavalida = false, nodigito=false;
-    
+
     while (Respuesta == "y") {
-        cout << "Ingrese un numero: \n";
-        cin >> numstring;
-        while (cin.fail()) {
+        std::cout << "Ingrese un numero: \n";
+        std::cin>> numstring;
+        while (std::cin.fail()) {
             std::cin.clear();
             std::cin.ignore(100, '\n');
             std::cout << "No ha ingresado un numero positivo, favor ingresar un numero positivo. \n";
@@ -22,8 +22,8 @@ int main()
         for (int i = 0; i < numstring.length(); i++) {
             nodigito = isdigit((int)numstring[i]);
             try {
-                numposición = stoi(numstring.substr(i,1));
-                num = num + (numposición * pow(10, (numstring.length() - 1 - i)));
+                numposicion = stoi(numstring.substr(i,1));
+                num = num + (numposicion * pow(10, (numstring.length() - 1 - i)));
             }
             catch(exception){
                 nodigito = true;
@@ -35,9 +35,9 @@ int main()
             num = 0;
             std::cout << "El numero ingresado contenia un caractero o era negativo, favor ingresar un numero positivo. \n";
             std::cout << " \n";
-            cout << "Ingrese un numero: \n";
-            cin >> numstring;
-            while (cin.fail()) {
+            std::cout << "Ingrese un numero: \n";
+            std::cin >> numstring;
+            while (std::cin.fail()) {
                 std::cin.clear();
                 std::cin.ignore(100, '\n');
                 std::cout << "No ha ingresado un numero positivo, favor ingresar un numero positivo. \n";
@@ -45,8 +45,8 @@ int main()
             }
             for (int i = 0; i < numstring.length(); i++) {
                 try {
-                    numposición = stoi(numstring.substr(i,1));
-                    num = num + (numposición * pow(10, (numstring.length() - 1 - i)));
+                    numposicion = stoi(numstring.substr(i,1));
+                    num = num + (numposicion * pow(10, (numstring.length() - 1 - i)));
                 }
                 catch (exception) {
                     nodigito = true;

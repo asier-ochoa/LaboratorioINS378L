@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 int validacion(int n, int i, int num) {
 	std::cout << "Inserte el numero positivo " << i + 1 << " del primer arreglo porfavor ( " << i + 1 << "/" << n << " ):\n";
 	std::cin >> num;
@@ -26,14 +24,14 @@ int main()
 	//Arreglo 1
 	//Resizesing dinamicamente
 
-	cout << "¿Cuantos elementos desea posea del arrego" << l << "?:" << "\n";
-	cin >> n;
-	while(cin.fail() || n<=0)
+	std::cout << "¿Cuantos elementos desea posea del arrego" << l << "?:" << "\n";
+	std::cin >> n;
+	while(std::cin.fail() || n<=0)
 	{
-		cin.clear();
-		cin.ignore(100, '\n');
-		std::cout << "No ha ingresado un numero valido, porfavor inserte un numero de 1 hasta infinito positivo: " << endl;
-		cin >> n;
+		std::cin.clear();
+		std::cin.ignore(100, '\n');
+		std::cout << "No ha ingresado un numero valido, porfavor inserte un numero de 1 hasta infinito positivo: \n";
+		std::cin >> n;
 	}
 
 	int* array1 = new int(n);
@@ -76,15 +74,15 @@ int main()
 	//Arreglo 2
 	//Resizesing dinamicamente
 	std::cout << "¿Cuantos elementos desea posea del arrego" << l << "?:" << "\n";
-	cin >> w;
-	while (cin.fail() || w <= 0)
+	std::cin >> w;
+	while (std::cin.fail() || w <= 0)
 	{
-		cin.clear();
-		cin.ignore(100, '\n');
-		std::cout << "No ha ingresado un numero valido, porfavor inserte un numero de 0 hasta infinito positivo: " << endl;
-		cin >> w;
+		std::cin.clear();
+		std::cin.ignore(100, '\n');
+		std::cout << "No ha ingresado un numero valido, porfavor inserte un numero de 0 hasta infinito positivo: \n";
+		std::cin >> w;
 	}
-	int* array2 = new int(w);
+	int* array2 = new int[w];
 	//Capturando
 	i = 0;
 	while (i < w) {
