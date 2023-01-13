@@ -114,7 +114,7 @@ void restartGame(){
 //Ai seeks max
 int minimax(char* board, bool p1Turn){
     if (hasWon(board)){
-        if (p1Turn) //inverse
+        if (!p1Turn) //inverse
             return 1;
         else
             return -1;
@@ -122,23 +122,39 @@ int minimax(char* board, bool p1Turn){
     if (hasTied()) {
         return 0;
     }
-    int maxScore = -999999;
-    int score;
+
+    int scores[9] = {-999999};
 
     for (int i = 0; i < 9; i++){
         if (board[i] == ' '){
-            board[i] = (p1Turn ? 'X' : 'O');
-            score = minimax(board, !p1Turn);
-            if (score > maxScore){
-                maxScore = score;
+            char newBoard[9];
+            memcpy(newBoard, board, 9);
+            newBoard[i] = (p1Turn ? 'X' : 'O');
+            scores[i] = minimax(newBoard, !p1Turn);
+        }
+    }
+
+    int bestMove = 0;
+    if (!p1Turn){
+        int bestScore = -999999;
+        for (int i = 0; i < 9; i++){
+            if (scores[i] > bestScore){
+                bestMove = i;
+                bestScore = scores[i];
+            }
+        }
+    } else {
+        int bestScore = -999999;
+        for (int i = 0; i < 9; i++){
+            if (scores[i] < bestScore){
+                bestMove = i;
+                bestScore = scores[i];
             }
         }
     }
-    return maxScore;
-
 }
 
-void runAI(wxButton* buttons){
+void runAI(wxButton** buttons){
     wxUIActionSimulator sim;
     //Create virtual board
     char simBoard[9];
@@ -149,11 +165,15 @@ void runAI(wxButton* buttons){
 
     for (int i = 0; i < 9; i++){
         if (simBoard[i] == ' ') {
-            bestMoveScore = minimax(simBoard, virtualP1turn);
+            int score = minimax(simBoard, virtualP1turn);
+            if (score > bestMoveScore){
+                bestMove = i;
+                bestMoveScore = score;
+            }
         }
     }
 
-    sim.MouseMove(buttons[bestMove].GetPosition());
+    sim.MouseMove(buttons[bestMove]->GetScreenPosition());
     sim.MouseClick();
 }
 
