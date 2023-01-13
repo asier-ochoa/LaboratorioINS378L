@@ -28,37 +28,38 @@ int main()
     
     int array[length];
 
-    for (size_t i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         cout<<"Ingrese un valor: ";
         cin>>array[i];
     }
 
     int seen[length];
-    for (size_t i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         seen[i] = 0;
     }
     
-    for (size_t i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         if (seen[i] == 0)
         {
             int ocurrence = 0;
-            for (size_t j = i; j < length; j++)
+            for (int j = i; j < length; j++)
             {
                 if (array[j] == array[i])
                 {
                     ocurrence += 1;
+                    seen[j] = 1;
                 }
             }
-            seen[i] = ocurrence;
+            cout << array[i] << " ocurre " << ocurrence << " " << " veces" << endl;
         }
     }
 
-    for (size_t i = 0; i < length; i++)
+    /*for (int i = 0; i < length; i++)
     {
         cout << array[i] << " ocurre " << seen[i] << " " << " veces" << endl;
-    }
+    }*/
     return 0;
 }
