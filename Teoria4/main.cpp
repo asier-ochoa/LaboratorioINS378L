@@ -86,6 +86,14 @@ bool hasTied() {
     return true;
 }
 
+bool hasTied(const char* gameBoard){
+    for (int i = 0; i < 9; i++){
+        if (gameBoard[i] == ' ')
+            return false;
+    }
+    return true;
+}
+
 bool setPiece(int i){
     using namespace State;
     if (gameBoard[i] != ' ')
@@ -103,12 +111,50 @@ void restartGame(){
     }
 }
 
-void runAI(wxUIActionSimulator& sim, wxButton* buttons){
-    auto* simBoard = new bool[9];
-    memcpy(simBoard, &State::player1Turn, 9);
+//Ai seeks max
+int minimax(char* board, bool p1Turn){
+    if (hasWon(board)){
+        if (p1Turn) //inverse
+            return 1;
+        else
+            return -1;
+    }
+    if (hasTied()) {
+        return 0;
+    }
+    int maxScore = -999999;
+    int score;
 
+    for (int i = 0; i < 9; i++){
+        if (board[i] == ' '){
+            board[i] = (p1Turn ? 'X' : 'O');
+            score = minimax(board, !p1Turn);
+            if (score > maxScore){
+                maxScore = score;
+            }
+        }
+    }
+    return maxScore;
 
-    delete[] simBoard;
+}
+
+void runAI(wxButton* buttons){
+    wxUIActionSimulator sim;
+    //Create virtual board
+    char simBoard[9];
+    memcpy(simBoard, State::gameBoard, 9);
+    bool virtualP1turn = false;
+    int bestMove = 0;
+    int bestMoveScore = -9999999;
+
+    for (int i = 0; i < 9; i++){
+        if (simBoard[i] == ' ') {
+            bestMoveScore = minimax(simBoard, virtualP1turn);
+        }
+    }
+
+    sim.MouseMove(buttons[bestMove].GetPosition());
+    sim.MouseClick();
 }
 
 //UI code below
@@ -180,8 +226,6 @@ PlayerDialog::PlayerDialog(wxWindow* parent, wxWindowID id, const wxString &titl
 
 MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
         : wxFrame(nullptr, wxID_ANY, title, pos, size){
-    //ui simulator
-    wxUIActionSimulator sim;
 
     auto mainLayout = new wxBoxSizer(wxVERTICAL);
     this->SetSizer(mainLayout);
@@ -206,7 +250,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
                 gameGrid[i]->SetLabel(State::gameBoard[i]);
                 statusText->SetLabel("It's " + (State::player1Turn ? State::p1Name : State::p2Name) + "'s turn");
                 if (!State::player1Turn){
-                    runAI(gameGrid)
+                    runAI(gameGrid);
                 }
             }
             if (hasWon()){
