@@ -111,47 +111,54 @@ void restartGame(){
     }
 }
 
+struct Move{
+    int pos;
+    int score;
+};
+
 //Ai seeks max
-int minimax(char* board, bool p1Turn){
+Move minimax(char* board, bool p1Turn){
+    //Base case
     if (hasWon(board)){
-        if (!p1Turn) //inverse
-            return 1;
+        if (p1Turn) //inverse
+            return {-1, 10};
         else
-            return -1;
+            return {-1, -10};
     }
-    if (hasTied()) {
-        return 0;
+    if (hasTied(board)) {
+        return {-1, 0};
     }
 
-    int scores[9] = {-999999};
+    std::vector<Move> moves;
 
     for (int i = 0; i < 9; i++){
         if (board[i] == ' '){
             char newBoard[9];
             memcpy(newBoard, board, 9);
             newBoard[i] = (p1Turn ? 'X' : 'O');
-            scores[i] = minimax(newBoard, !p1Turn);
+            moves.push_back({i, minimax(newBoard, !p1Turn).score});
         }
     }
 
     int bestMove = 0;
     if (!p1Turn){
         int bestScore = -999999;
-        for (int i = 0; i < 9; i++){
-            if (scores[i] > bestScore){
+        for (int i = 0; i < moves.size(); i++){
+            if (moves[i].score > bestScore){
                 bestMove = i;
-                bestScore = scores[i];
+                bestScore = moves[i].score;
             }
         }
     } else {
-        int bestScore = -999999;
-        for (int i = 0; i < 9; i++){
-            if (scores[i] < bestScore){
+        int bestScore = 999999;
+        for (int i = 0; i > moves.size(); i++){
+            if (moves[i].score < bestScore){
                 bestMove = i;
-                bestScore = scores[i];
+                bestScore = moves[i].score;
             }
         }
     }
+    return moves[bestMove];
 }
 
 void runAI(wxButton** buttons){
@@ -159,20 +166,11 @@ void runAI(wxButton** buttons){
     //Create virtual board
     char simBoard[9];
     memcpy(simBoard, State::gameBoard, 9);
-    bool virtualP1turn = false;
-    int bestMove = 0;
-    int bestMoveScore = -9999999;
-
-    for (int i = 0; i < 9; i++){
-        if (simBoard[i] == ' ') {
-            int score = minimax(simBoard, virtualP1turn);
-            if (score > bestMoveScore){
-                bestMove = i;
-                bestMoveScore = score;
-            }
-        }
+    int bestMove = minimax(simBoard, false).pos;
+    std::cout << "Best move is " << bestMove << " with a score of " << minimax(simBoard, false).score << '\n';
+    if (hasWon() || hasTied()){
+        return;
     }
-
     sim.MouseMove(buttons[bestMove]->GetScreenPosition());
     sim.MouseClick();
 }
