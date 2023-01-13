@@ -120,10 +120,10 @@ struct Move{
 Move minimax(char* board, bool p1Turn){
     //Base case
     if (hasWon(board)){
-        if (p1Turn) //inverse
-            return {-1, 10};
-        else
+        if (!p1Turn)
             return {-1, -10};
+        else
+            return {-1, 10};
     }
     if (hasTied(board)) {
         return {-1, 0};
@@ -133,10 +133,12 @@ Move minimax(char* board, bool p1Turn){
 
     for (int i = 0; i < 9; i++){
         if (board[i] == ' '){
-            char newBoard[9];
-            memcpy(newBoard, board, 9);
-            newBoard[i] = (p1Turn ? 'X' : 'O');
-            moves.push_back({i, minimax(newBoard, !p1Turn).score});
+            Move m;
+            m.pos = i;
+            board[i] = (p1Turn ? 'X' : 'O');
+            m.score = minimax(board, !p1Turn).score;
+            moves.push_back(m);
+            board[i] = ' ';
         }
     }
 
@@ -151,7 +153,7 @@ Move minimax(char* board, bool p1Turn){
         }
     } else {
         int bestScore = 999999;
-        for (int i = 0; i > moves.size(); i++){
+        for (int i = 0; i < moves.size(); i++){
             if (moves[i].score < bestScore){
                 bestMove = i;
                 bestScore = moves[i].score;
