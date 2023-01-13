@@ -40,13 +40,12 @@ int main()
         seen[i] = 0;
     }
     
-
     for (size_t i = 0; i < length; i++)
     {
         if (seen[i] == 0)
         {
             int ocurrence = 0;
-            for (size_t j = i; i < length; j++)
+            for (size_t j = i; j < length; j++)
             {
                 if (array[j] == array[i])
                 {
@@ -56,7 +55,7 @@ int main()
             seen[i] = ocurrence;
         }
     }
-    
+
     for (size_t i = 0; i < length; i++)
     {
         cout << array[i] << " ocurre " << seen[i] << " " << " veces" << endl;
