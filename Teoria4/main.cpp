@@ -166,13 +166,13 @@ Move minimax(char* board, bool p1Turn){
 void runAI(wxButton** buttons){
     wxUIActionSimulator sim;
     //Create virtual board
+    if (hasWon() || hasTied()){
+        return;
+    }
     char simBoard[9];
     memcpy(simBoard, State::gameBoard, 9);
     int bestMove = minimax(simBoard, false).pos;
     std::cout << "Best move is " << bestMove << " with a score of " << minimax(simBoard, false).score << '\n';
-    if (hasWon() || hasTied()){
-        return;
-    }
     sim.MouseMove(buttons[bestMove]->GetScreenPosition());
     sim.MouseClick();
 }
