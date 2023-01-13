@@ -7,21 +7,21 @@ using namespace std;
 
 int main()
 {
-    int num = 0, length = 0;
+    int num = 0;
     cout << "Ingrese el numero a separar: ";
     cin >> num;
 
     int size = trunc(log10(num)) + 1;
 
-    do
-    {
-        ++length;
-        num /= 10;
-    } while (num);
+    int digits[size];
 
-    cout << length << " dividiendo base 10\n";
-    cout << size << " con Cmath";
+    while(num > 0) 
+    {
+        int mod = num % 10;
+        cout << mod << ' ';
     
+        num = num / 10;
+    }
 
     return 0;
 }
