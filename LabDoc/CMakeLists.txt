@@ -1,4 +1,3 @@
 add_executable(Doc_Ocurrencias ocurrencias.cpp)
-add_executable(Doc_SeparacionNumeros SeparacionNumeros.cpp)
 add_executable(Doc_ArraysInOrder ArraysInOrder2.cpp)
 add_executable(Doc_Digitos digitos.cpp)
