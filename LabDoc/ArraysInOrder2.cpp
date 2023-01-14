@@ -1,3 +1,7 @@
+//ENUNCIADO:
+//2 arreglos ordenados se combinan
+//PARTICIPANTES: 1101331 Ochoa Asier; 1072515 Rodoflo Peña; Carlos Ismael Garcia 1101629; 1100685 Miguelangel; Yeuris Terrero 1099399
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
